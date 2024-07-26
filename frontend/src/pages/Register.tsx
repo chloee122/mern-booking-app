@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { useMutation } from "@tanstack/react-query";
+import { useAppContext } from "../context/AppContext";
 
-export interface FormType {
+export interface RegisterFormData {
   firstName: string;
   lastName: string;
   email: string;
@@ -11,21 +12,28 @@ export interface FormType {
   confirmPassword: string;
 }
 
-function RegisterForm() {
+function Register() {
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormType>();
+  } = useForm<RegisterFormData>();
+
+  const { showToast } = useAppContext();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: apiClient.register,
     onSuccess: () => {
-      console.log("Registration successful!");
+      showToast({ message: "Registration successful!", type: "SUCCESS" });
+      navigate("/");
     },
     onError: (error) => {
-      console.log(error.message);
+      showToast({
+        message: error.message,
+        type: "ERROR",
+      });
     },
   });
 
@@ -122,4 +130,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default Register;
