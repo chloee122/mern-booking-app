@@ -1,8 +1,12 @@
-import { createContext, useContext, useState } from "react";
+// import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Toast from "../components/Toast";
+import * as apiClient from "../api-client";
 
-interface AppContext {
+export interface AppContextType {
   showToast: (toastMessage: ToastMessage) => void;
+  isLoggedIn: boolean;
 }
 
 interface ToastMessage {
@@ -10,14 +14,22 @@ interface ToastMessage {
   type: "SUCCESS" | "ERROR";
 }
 
-const AppContext = createContext<AppContext | undefined>(undefined);
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppContextProvider({
+export default function AppContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [toast, setToast] = useState<ToastMessage | null>(null);
+
+  const { isSuccess } = useQuery({
+    queryKey: ["validateToken"],
+    queryFn: apiClient.validateToken,
+    retry: false,
+  });
+
+  console.log("sucess: ", isSuccess);
 
   return (
     <AppContext.Provider
@@ -25,6 +37,7 @@ export function AppContextProvider({
         showToast: (toastMessage) => {
           setToast(toastMessage);
         },
+        isLoggedIn: isSuccess,
       }}
     >
       {toast && (
@@ -38,11 +51,3 @@ export function AppContextProvider({
     </AppContext.Provider>
   );
 }
-
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppContextProvider");
-  }
-  return context;
-};
