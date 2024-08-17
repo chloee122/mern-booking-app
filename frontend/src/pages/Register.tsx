@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import * as apiClient from "../api-client";
-import { useMutation } from "@tanstack/react-query";
-import { useAppContext } from "../context/AppContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useAppContext from "../hook/useAppContext";
 
 export interface RegisterFormData {
   firstName: string;
@@ -20,13 +20,15 @@ function Register() {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
+  const queryClient = useQueryClient();
   const { showToast } = useAppContext();
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: apiClient.register,
-    onSuccess: () => {
+    onSuccess: async () => {
       showToast({ message: "Registration successful!", type: "SUCCESS" });
+      await queryClient.invalidateQueries({ queryKey: ["validateToken"] });
       navigate("/");
     },
     onError: (error) => {
@@ -112,7 +114,7 @@ function Register() {
       </label>
       <div className="flex justify-between items-center">
         <span className="text-gray-700">
-          Already registered?
+          Already registered?{" "}
           <Link className="underline" to="/login">
             Sign in here
           </Link>
