@@ -28,8 +28,6 @@ export default function AppContextProvider({
     retry: false,
   });
 
-  console.log("sucess: ", isSuccess);
-
   return (
     <AppContext.Provider
       value={{
