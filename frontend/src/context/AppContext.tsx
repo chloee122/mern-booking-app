@@ -5,6 +5,7 @@ import * as apiClient from "../api-client";
 
 export interface AppContextType {
   showToast: (toastMessage: ToastMessage) => void;
+  isCheckingIfLoggedIn: boolean;
   isLoggedIn: boolean;
 }
 
@@ -22,7 +23,7 @@ export default function AppContextProvider({
 }) {
   const [toast, setToast] = useState<ToastMessage | null>(null);
 
-  const { isSuccess } = useQuery({
+  const { isPending, isSuccess } = useQuery({
     queryKey: ["validateToken"],
     queryFn: apiClient.validateToken,
     retry: false,
@@ -34,6 +35,7 @@ export default function AppContextProvider({
         showToast: (toastMessage) => {
           setToast(toastMessage);
         },
+        isCheckingIfLoggedIn: isPending,
         isLoggedIn: isSuccess,
       }}
     >
