@@ -9,6 +9,8 @@ import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import AddHotel from "./pages/AddHotel";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MyHotel from "./pages/MyHotels";
+
 function App() {
   return (
     <Router>
@@ -46,15 +48,15 @@ function App() {
           }
         />
         <Route
-          path="/add-hotel"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <AddHotel />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <ProtectedRoute />
+            </Layout>
           }
-        />
+        >
+          <Route path="/add-hotel" element={<AddHotel />} />
+          <Route path="/my-hotels" element={<MyHotel />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

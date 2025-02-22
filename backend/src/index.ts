@@ -8,6 +8,7 @@ import { v2 as cloudinary } from "cloudinary";
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import hotelRoutes from "./routes/my-hotels";
+import testingRoutes from "./routes/testing";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -30,6 +31,10 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/my-hotels", hotelRoutes);
+
+if (process.env.NODE_ENV === "test") {
+  app.use("/api/testing", testingRoutes);
+}
 
 app.get("*", function (req: Request, res: Response) {
   res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
