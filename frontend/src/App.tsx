@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import AddHotel from "./pages/AddHotel";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyHotel from "./pages/MyHotels";
+import EditHotel from "./pages/EditHotel";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
         >
           <Route path="/add-hotel" element={<AddHotel />} />
           <Route path="/my-hotels" element={<MyHotel />} />
+          <Route path="/edit-hotel/:id" element={<EditHotel />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

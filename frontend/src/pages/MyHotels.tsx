@@ -66,7 +66,7 @@ function MyHotel() {
               </div>
               <span className="flex justify-end">
                 <Link
-                  to={`edit-hotel/${hotel._id}`}
+                  to={`/edit-hotel/${hotel._id}`}
                   className="bg-blue-600 text-white text-sm font-bold p-2 hover:bg-blue-500"
                 >
                   View details
